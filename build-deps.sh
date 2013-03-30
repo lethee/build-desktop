@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RELEASE=`lsb_release -sr`
-INSTALLS="git-core
+INSTALLS="git
 pkg-config
 make
 autoconf 
@@ -47,13 +47,22 @@ libxcb-keysyms1-dev
 libxcb-image0-dev
 libxcb-render-util0-dev"
 
-if [ "$RELEASE" = "12.04" ] ; then
+if [ "$RELEASE" = "12.04" ]; then
   INSTALLS="$INSTALLS libxcb-icccm4-dev"
 else
   INSTALLS="$INSTALLS libxcb-icccm1-dev"
 fi
 
-echo $INSTALLS
+sudo apt-get install $INSTALLS
+if [ $? -ne 0 ]; then
+  echo "build is not ready"
+  exit 1
+fi
 
+echo
 echo "to build:"
 echo " $ ./build-webos-desktop.sh"
+
+RESOLUTION=$(xdpyinfo | sed 's/^ *dimensions: *\([0-9x]*\).*/\1/;t;d')
+echo
+echo $RESOLUTION
